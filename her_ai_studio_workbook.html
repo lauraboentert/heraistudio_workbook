@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Her AI Studio Club — 6-Month Workbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F5EF;
+  --card:#fff;
+  --border:#E5E0D8;
+  --text:#1C1917;
+  --muted:#8C8780;
+  --rosa:#C4607A;
+  --rosa-light:#FBEAF0;
+  --green:#1D9E75;
+  --green-light:#E1F5EE;
+  --purple:#534AB7;
+  --purple-light:#EEEDFE;
+  --amber:#BA7517;
+  --amber-light:#FAEEDA;
+  --phase1:#6B6560;
+  --phase2:#534AB7;
+  --phase3:#1D9E75;
+}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);padding:0 0 80px;line-height:1.6}
+
+/* TOP NAV */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:#1C1917;border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:100}
+.brand{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#F8F5EF;letter-spacing:.01em}
+.brand em{color:#E8A0B0;font-style:normal}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;border-radius:6px;cursor:pointer;border:none;background:transparent;color:rgba(248,245,239,0.4);letter-spacing:.06em;transition:all .15s}
+.nav-tab:hover{color:rgba(248,245,239,0.7)}
+.nav-tab.on{background:rgba(248,245,239,0.1);color:#F8F5EF}
+.progress-pill{font-family:'DM Mono',monospace;font-size:10px;padding:5px 12px;border-radius:20px;background:rgba(196,96,122,0.15);color:#E8A0B0;border:1px solid rgba(196,96,122,0.3)}
+
+/* HERO */
+.hero{background:#1C1917;padding:56px 40px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 15% 85%,rgba(83,74,183,0.18) 0%,transparent 55%),radial-gradient(ellipse at 85% 15%,rgba(196,96,122,0.12) 0%,transparent 50%)}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(248,245,239,0.35);margin-bottom:18px;position:relative}
+.hero-title{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;color:#F8F5EF;line-height:.95;letter-spacing:-.03em;margin-bottom:16px;position:relative}
+.hero-title em{color:#E8A0B0;font-style:normal}
+.hero-sub{font-size:14px;color:rgba(248,245,239,0.45);max-width:480px;margin:0 auto 32px;position:relative;line-height:1.7}
+.hero-stats{display:flex;justify-content:center;gap:40px;position:relative}
+.hs{text-align:center}
+.hs-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#E8A0B0}
+.hs-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,245,239,0.3);margin-top:2px}
+
+/* SECTION WRAPPER */
+.page{display:none;padding:40px 32px}
+.page.on{display:block}
+.section-head{display:flex;align-items:baseline;gap:12px;margin-bottom:28px}
+.section-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:4px 10px;border:1px solid var(--border);border-radius:20px}
+.section-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.02em}
+
+/* PHASE CARDS */
+.phases{display:flex;flex-direction:column;gap:20px}
+.phase-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.phase-head{display:flex;align-items:center;gap:16px;padding:22px 24px;cursor:pointer;transition:background .12s}
+.phase-head:hover{background:#F8F5EF}
+.phase-num{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--muted)}
+.phase-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.phase-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;flex:1}
+.phase-period{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+.phase-body{padding:0 24px 24px;display:none;border-top:1px solid var(--border);margin-top:0}
+.phase-body.open{display:block}
+.phase-intro{font-size:13px;color:var(--muted);line-height:1.7;padding:16px 0 20px}
+
+/* SESSION CARDS */
+.sessions{display:flex;flex-direction:column;gap:10px}
+.session{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 18px;cursor:pointer}
+.session:hover{border-color:#ccc}
+.session.done{opacity:.5}
+.session.done .s-title{text-decoration:line-through}
+.s-head{display:flex;align-items:center;gap:12px}
+.s-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.session.done .s-check{background:var(--green);border-color:var(--green)}
+.s-tick{display:none;font-size:10px;font-weight:700;color:#fff}
+.session.done .s-tick{display:block}
+.s-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);flex-shrink:0}
+.s-title{font-size:13px;font-weight:500}
+.s-type{font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:12px;margin-left:auto;flex-shrink:0}
+.t-theory{background:var(--purple-light);color:#3C3489}
+.t-practice{background:var(--green-light);color:#085041}
+.t-project{background:var(--rosa-light);color:#72243E}
+.t-tools{background:var(--amber-light);color:#633806}
+.s-details{margin-top:12px;display:none;padding-top:12px;border-top:1px solid var(--border)}
+.session.expanded .s-details{display:block}
+.s-desc{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.s-tasks{display:flex;flex-direction:column;gap:6px}
+.s-task{font-size:12px;display:flex;gap:8px;align-items:flex-start}
+.s-task::before{content:'→';color:var(--muted);flex-shrink:0;margin-top:1px}
+.s-course{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:10px;color:var(--rosa);background:var(--rosa-light);padding:4px 10px;border-radius:12px;margin-top:8px;text-decoration:none;border:none;cursor:pointer}
+.mini-challenge{background:linear-gradient(135deg,var(--amber-light),#fff8ed);border:1px solid #f0ddb8;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12px;color:#633806}
+.mini-challenge strong{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:4px}
+
+/* OVERALL PROGRESS */
+.prog-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:28px}
+.prog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.prog-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700}
+.prog-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)}
+.prog-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.prog-fill{height:100%;background:var(--green);border-radius:3px;transition:width .4s}
+.prog-phases{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.prog-phase{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px}
+.pp-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.pp-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.pp-fill{height:100%;border-radius:2px;transition:width .4s}
+.pp-count{font-size:11px;color:var(--muted)}
+
+/* CONCEPTS TAB */
+.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.concept-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.cc-icon{font-size:20px;margin-bottom:8px}
+.cc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cc-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px}
+.cc-body{font-size:12px;color:var(--muted);line-height:1.65}
+.concept-mega{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+.cm-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cm-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;padding:4px 10px;border-radius:12px;text-transform:uppercase}
+.concept-list{display:flex;flex-direction:column;gap:8px}
+.cl-item{display:flex;gap:10px;font-size:12px}
+.cl-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;margin-top:5px}
+
+/* RESOURCES TAB */
+.resource-grid{display:flex;flex-direction:column;gap:12px}
+.resource-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:14px}
+.rc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.rc-body{flex:1}
+.rc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.rc-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.rc-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.rc-link{font-family:'DM Mono',monospace;font-size:10px;color:var(--rosa);margin-top:6px;display:inline-block}
+
+/* NOTES */
+.notes-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+.notes-header{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px}
+.note-area{width:100%;min-height:100px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);resize:vertical;outline:none;line-height:1.6;transition:border-color .15s}
+.note-area:focus{border-color:#aaa}
+.note-area::placeholder{color:var(--muted)}
+.save-btn{margin-top:8px;font-family:'DM Mono',monospace;font-size:10px;padding:7px 16px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;transition:all .15s}
+.save-btn:hover{border-color:var(--rosa);color:var(--rosa)}
+
+/* LEVEL BADGES */
+.level-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.level-badge{font-size:11px;padding:4px 12px;border-radius:20px;font-family:'DM Mono',monospace;letter-spacing:.04em}
+.lb-beginner{background:var(--green-light);color:#085041}
+.lb-intermediate{background:var(--purple-light);color:#3C3489}
+.lb-advanced{background:var(--rosa-light);color:#72243E}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Her AI Studio <em>✦</em> Club Workbook</div>
+  <div class="nav-tabs">
+    <div class="nav-tab on" onclick="showPage('overview')">Übersicht</div>
+    <div class="nav-tab" onclick="showPage('phase1')">Phase 1</div>
+    <div class="nav-tab" onclick="showPage('phase2')">Phase 2</div>
+    <div class="nav-tab" onclick="showPage('phase3')">Phase 3</div>
+    <div class="nav-tab" onclick="showPage('concepts')">Konzepte</div>
+    <div class="nav-tab" onclick="showPage('resources')">Ressourcen</div>
+    <div class="nav-tab" onclick="showPage('notes')">Notizen</div>
+  </div>
+  <div class="progress-pill" id="global-prog">0 / 18 Sessions</div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Her AI Studio Club — 6-Monats-Programm</div>
+  <div class="hero-title">Claude <em>meistern.</em><br>Gemeinsam.</div>
+  <div class="hero-sub">Von den Basics bis zu echten AI-Workflows — strukturiert, praxisnah, peer-to-peer. Basierend auf Anthropic Academy Kursen & aktuellen Trends 2026.</div>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-num">6</div><div class="hs-label">Monate</div></div>
+    <div class="hs"><div class="hs-num">18</div><div class="hs-label">Sessions</div></div>
+    <div class="hs"><div class="hs-num">3</div><div class="hs-label">Phasen</div></div>
+    <div class="hs"><div class="hs-num">∞</div><div class="hs-label">Möglichkeiten</div></div>
+  </div>
+</div>
+
+<!-- OVERVIEW PAGE -->
+<div class="page on" id="page-overview">
+  <div class="prog-section">
+    <div class="prog-header">
+      <div class="prog-title">Gesamtfortschritt</div>
+      <div class="prog-count" id="prog-count">0 von 18 Sessions abgeschlossen</div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="prog-phases">
+      <div class="prog-phase">
+        <div class="pp-label">Phase 1 — Foundations</div>
+        <div class="pp-bar"><div class="pp-fill" id="pp1" style="width:0%;background:var(--phase1)"></div></div>
+        <div class="pp-count" id="pp1-count">0 / 6</div>
+      </div>
+      <div class="prog-phase">
+        <div class="pp-label">Phase 2 — Applied AI</div>
+        <div class="pp-bar"><div class="pp-fill" id="pp2" style="width:0%;background:var(--phase2)"></div></div>
+        <div class="pp-count" id="pp2-count">0 / 6</div>
+      </div>
+      <div class="prog-phase">
+        <div class="pp-label">Phase 3 — Advanced</div>
+        <div class="pp-bar"><div class="pp-fill" id="pp3" style="width:0%;background:var(--phase3)"></div></div>
+        <div class="pp-count" id="pp3-count">0 / 6</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="section-tag">Das Programm</span>
+    <span class="section-title">3 Phasen, 6 Monate</span>
+  </div>
+  <div class="level-row">
+    <span class="level-badge lb-beginner">● Einsteiger — Phase 1</span>
+    <span class="level-badge lb-intermediate">● Fortgeschritten — Phase 2</span>
+    <span class="level-badge lb-advanced">● Profi — Phase 3</span>
+  </div>
+  <div class="phases">
+    <div class="phase-card">
+      <div class="phase-head" onclick="togglePhase(this)">
+        <span class="phase-num">Phase 01</span>
+        <div class="phase-dot" style="background:#6B6560"></div>
+        <div class="phase-title">Foundations — Claude wirklich verstehen</div>
+        <div class="phase-period">Monat 1 – 2</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-intro">Wir starten bei Null, ohne Vorwurf. Jeder lernt: Was ist Claude wirklich? Wie funktioniert Prompting? Wie nutze ich AI täglich? Basierend auf: Claude 101, AI Fluency Framework & Prompt Engineering Fundamentals (Anthropic Academy — kostenlos).</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-head" onclick="togglePhase(this)">
+        <span class="phase-num">Phase 02</span>
+        <div class="phase-dot" style="background:#534AB7"></div>
+        <div class="phase-title">Applied AI — Echte Workflows bauen</div>
+        <div class="phase-period">Monat 3 – 4</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-intro">Wir bauen echte Workflows für Job, Kreativität und Content. Jede:r entwickelt seine eigene AI-Routine. Tools wie Claude Projects, Artifacts, Canvas und Higgsfield werden praxisnah eingesetzt.</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-head" onclick="togglePhase(this)">
+        <span class="phase-num">Phase 03</span>
+        <div class="phase-dot" style="background:#1D9E75"></div>
+        <div class="phase-title">Advanced — Agents, MCP & Automation</div>
+        <div class="phase-period">Monat 5 – 6</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-intro">Der Club wird zur Community von echten AI-Powerusern. Wir lernen Subagents, MCP-Verbindungen, Claude Cowork und bauen unser erstes eigenes AI-Projekt. Abschluss: jede:r präsentiert ihr persönliches AI-Setup.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1 PAGE -->
+<div class="page" id="page-phase1">
+  <div class="section-head">
+    <span class="section-tag" style="border-color:#6B6560;color:#6B6560">Phase 1</span>
+    <span class="section-title">Foundations — Monat 1 & 2</span>
+  </div>
+  <div class="sessions" id="sessions-p1">
+
+    <div class="session" data-phase="1" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S01</span>
+        <span class="s-title">Kick-off: Was ist Claude? Was ist AI wirklich?</span>
+        <span class="s-type t-theory">Theorie</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Jede:r stellt vor, was sie von Claude erwartet. Gemeinsam schauen wir: Wie unterscheidet sich Claude von ChatGPT? Was kann AI, was nicht? Wir bauen ein gemeinsames Grundverständnis.</div>
+        <div class="s-tasks">
+          <div class="s-task">Anthropic Academy: Kurs "Claude 101" beginnen (kostenlos, kein Account nötig)</div>
+          <div class="s-task">Claude.ai Account erstellen — Free Plan reicht zum Start</div>
+          <div class="s-task">Jede:r schreibt 3 Fragen auf: Was möchte ich mit Claude lösen?</div>
+        </div>
+        <span class="s-course">📖 Kurs: Claude 101 — anthropic.skilljar.com</span>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 2</strong>Teste Claude 30 Minuten mit einem echten Problem aus deinem Alltag. Bring dein ehrlichstes Fazit mit — was hat dich überrascht?</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="1" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S02</span>
+        <span class="s-title">Prompt Engineering: Die Kunst des guten Fragens</span>
+        <span class="s-type t-theory">Theorie</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Warum liefert Claude manchmal schlechte Antworten? Weil die Frage schlecht war. Wir lernen die Grundprinzipien: Kontext geben, Rolle zuweisen, Format definieren, mit Beispielen arbeiten.</div>
+        <div class="s-tasks">
+          <div class="s-task">Anthropic Academy: "Prompt Engineering Fundamentals" starten</div>
+          <div class="s-task">Live-Demo: Schlechter vs. guter Prompt — Unterschied zeigen</div>
+          <div class="s-task">Jede:r schreibt ihren eigenen "Master Prompt" für eine Alltagsaufgabe</div>
+          <div class="s-task">Prompt-Formel lernen: Rolle + Kontext + Aufgabe + Format + Ton</div>
+        </div>
+        <span class="s-course">📖 Kurs: Prompt Engineering Fundamentals — anthropic.skilljar.com</span>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 3</strong>Schreibe 3 verschiedene Prompts für dieselbe Aufgabe. Fotografiere die Ergebnisse und bring sie zur Session.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="1" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S03</span>
+        <span class="s-title">Claude für den Job: Texte, Mails, Analysen</span>
+        <span class="s-type t-practice">Praxis</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Wir wenden Claude auf echte Arbeitssituationen an. Mails schreiben, zusammenfassen, Präsentationen strukturieren, Feedback formulieren. Jede:r bringt eine reale Aufgabe aus dem Job mit.</div>
+        <div class="s-tasks">
+          <div class="s-task">Workshop: "Bring your own problem" — echte Job-Aufgaben lösen</div>
+          <div class="s-task">Claude als Lektorin: eigene Texte verbessern lassen</div>
+          <div class="s-task">Zusammenfassungs-Workflows: PDFs, lange Dokumente komprimieren</div>
+          <div class="s-task">Mail-Templates erstellen, die man wirklich nutzt</div>
+        </div>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 4</strong>"5-Minuten-AI-Routine": Jeden Tag eine Aufgabe mit Claude erledigen. Notiere, was du gespart hast (Zeit, Energie, Stress).</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="1" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S04</span>
+        <span class="s-title">Claude Projects & Memory: Kontext clever nutzen</span>
+        <span class="s-type t-practice">Praxis</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Projects sind Claudes Gedächtnis. Wir lernen, wie man Projekte erstellt, Kontext permanent speichert und Claude wirklich personalisiert — so dass er dich kennt und besser antwortet.</div>
+        <div class="s-tasks">
+          <div class="s-task">Eigenes Claude Project anlegen (braucht Claude Pro oder kostenlos mit Limit)</div>
+          <div class="s-task">Persona und Kontext in den Project-Instruktionen definieren</div>
+          <div class="s-task">Dokumente ins Project hochladen und damit arbeiten</div>
+          <div class="s-task">Vergleich: Mit und ohne Project — der Unterschied ist spürbar</div>
+        </div>
+        <span class="s-course">📖 Kurs: Claude 101 — Modul "Projects & Memory"</span>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 5</strong>Erstelle ein eigenes Project für deinen häufigsten Anwendungsfall (Job, kreativ, Lernen). Zeige der Gruppe was darin steckt.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="1" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S05</span>
+        <span class="s-title">AI-Ethik & Grenzen: Was sollte ich wissen?</span>
+        <span class="s-type t-theory">Theorie</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">AI ist kein neutrales Werkzeug. Wir sprechen über Halluzinationen, Datenschutz, Copyright, und wie man AI verantwortungsvoll einsetzt. Anthropic's AI Fluency-Kurs liefert den Rahmen.</div>
+        <div class="s-tasks">
+          <div class="s-task">Anthropic Academy: "AI Fluency: Framework & Foundations" — Key-Takeaways besprechen</div>
+          <div class="s-task">Anthropic Academy: "AI Capabilities and Limitations" — was kann AI nicht?</div>
+          <div class="s-task">Gemeinsam: Wann vertraut ihr Claude, wann nicht? Eigene Regeln definieren</div>
+          <div class="s-task">Datenschutz-Check: Was gebt ihr in Claude ein? Was lieber nicht?</div>
+        </div>
+        <span class="s-course">📖 Kurs: AI Fluency: Framework & Foundations — anthropic.skilljar.com</span>
+      </div>
+    </div>
+
+    <div class="session" data-phase="1" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S06</span>
+        <span class="s-title">Phase 1 Review: Show & Tell — Was habt ihr gebaut?</span>
+        <span class="s-type t-project">Projekt</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Rückblick auf 2 Monate. Jede:r zeigt: Was ist mein bestes Prompt? Was hat Claude für mich verändert? Wo stecke ich noch? Gemeinsame Reflexion und Planung für Phase 2.</div>
+        <div class="s-tasks">
+          <div class="s-task">Jede:r präsentiert ihren "Best Prompt of Phase 1" (5 Min.)</div>
+          <div class="s-task">Gemeinsame Frage: Welche Tools wollen wir in Phase 2 deep-diven?</div>
+          <div class="s-task">Anthropic Academy Zertifikate feiern: Wer hat welchen Kurs abgeschlossen?</div>
+          <div class="s-task">Phase 2 Themen abstimmen und Moderationsrotation planen</div>
+        </div>
+        <div class="mini-challenge"><strong>Sommerprojekt vor Phase 2</strong>Erstelle eine "AI-Routine" Karte: Welche 3 Aufgaben machst du jetzt täglich mit Claude? Bring sie als Poster zur nächsten Session.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHASE 2 PAGE -->
+<div class="page" id="page-phase2">
+  <div class="section-head">
+    <span class="section-tag" style="border-color:#534AB7;color:#534AB7">Phase 2</span>
+    <span class="section-title">Applied AI — Monat 3 & 4</span>
+  </div>
+  <div class="sessions" id="sessions-p2">
+
+    <div class="session" data-phase="2" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S07</span>
+        <span class="s-title">Claude & Kreativität: Content, Bilder, Videos</span>
+        <span class="s-type t-tools">Tools</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Claude als Kreativ-Partnerin. Wir verbinden Claude mit Higgsfield (Videos), Canva (Design), und schauen wie man AI in kreative Workflows integriert — für Instagram, Präsentationen, Portfolios.</div>
+        <div class="s-tasks">
+          <div class="s-task">Higgsfield Demo: Claude schreibt das Script, Higgsfield macht das Video</div>
+          <div class="s-task">Canva + Claude: Design-Ideen generieren, Texte verfassen</div>
+          <div class="s-task">Content-Batch: 10 Social-Posts in 30 Minuten mit Claude generieren</div>
+          <div class="s-task">Jede:r erstellt ein eigenes Mini-Content-Paket</div>
+        </div>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 8</strong>Erstelle mit Claude + einem anderen AI-Tool (Higgsfield, Canva, Midjourney...) einen Inhalt, den du wirklich veröffentlichen würdest.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="2" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S08</span>
+        <span class="s-title">Advanced Prompting: Chains, Templates & Systeme</span>
+        <span class="s-type t-practice">Praxis</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Wir verlassen Einzelprompts und bauen Prompt-Ketten. Wie erstelle ich eine Prompt-Bibliothek? Wie baut man wiederholbare Workflows, die immer gleich gut funktionieren?</div>
+        <div class="s-tasks">
+          <div class="s-task">Prompt Chaining: Output von Prompt A wird Input von Prompt B</div>
+          <div class="s-task">Eigene Prompt-Bibliothek anlegen (Notion oder Google Docs)</div>
+          <div class="s-task">System Prompts schreiben: Claude eine Persönlichkeit geben</div>
+          <div class="s-task">Template-Workshop: Jede:r baut ein wiederverwendbares Workflow-Template</div>
+        </div>
+        <span class="s-course">📖 Kurs: Prompt Engineering Fundamentals — Advanced Modul</span>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 9</strong>Baue einen Prompt-Workflow aus mindestens 3 Schritten für eine echte Aufgabe. Dokumentiere jeden Schritt.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="2" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S09</span>
+        <span class="s-title">Claude + Notion: Dein persönliches AI-Betriebssystem</span>
+        <span class="s-type t-tools">Tools</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Claude verbunden mit Notion via MCP wird zu einem echten Arbeits-OS. Wir lernen, wie Notion als Wissensdatenbank für Claude dient und wie man Informationen automatisch strukturiert.</div>
+        <div class="s-tasks">
+          <div class="s-task">Notion MCP Connector in Claude.ai aktivieren (Einstellungen → Connectors)</div>
+          <div class="s-task">Claude liest deine Notion-Seiten und fasst zusammen</div>
+          <div class="s-task">Gemeinsam: Club-Wissensdatenbank in Notion strukturieren</div>
+          <div class="s-task">Workflow: Meeting-Notizen → Claude → Notion automatisch organisiert</div>
+        </div>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 10</strong>Verbinde Claude mit einem Tool deiner Wahl (Notion, Google Drive, Gmail...) und zeige einen echten Use-Case der Gruppe.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="2" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S10</span>
+        <span class="s-title">Claude für Recherche & Lernen: Web Search & Deep Research</span>
+        <span class="s-type t-practice">Praxis</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Claude kann das Web durchsuchen und tiefe Recherchen durchführen. Wir lernen wie man Claude als persönliche Forschungsassistentin einsetzt — für Wettbewerber-Analyse, Trend-Research, Lernpfade.</div>
+        <div class="s-tasks">
+          <div class="s-task">Web Search in Claude aktivieren und testen</div>
+          <div class="s-task">Deep Research Feature: Komplexe Themen in Minuten analysieren</div>
+          <div class="s-task">Quellen-Check: Wie verlässlich sind Claude's Recherchen?</div>
+          <div class="s-task">Use-Case Workshop: Marktanalyse, Trend-Report, Lernplan erstellen</div>
+        </div>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 11</strong>Nutze Claude's Deep Research für ein Thema, das dich interessiert. Präsentiere die Ergebnisse in 3 Folien.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="2" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S11</span>
+        <span class="s-title">Claude Artifacts & Code: Ohne Vorkenntnisse</span>
+        <span class="s-type t-practice">Praxis</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Artifacts lassen Claude interaktive Tools, Visualisierungen und Mini-Apps erstellen — ohne dass du coden musst. Wir bauen gemeinsam einfache nützliche Tools für den Alltag.</div>
+        <div class="s-tasks">
+          <div class="s-task">Was sind Artifacts? Live-Demo mit echten Beispielen</div>
+          <div class="s-task">Jede:r lässt Claude ein Tool für sich bauen (Kalorienzähler, Budget-Tracker, etc.)</div>
+          <div class="s-task">Einfache HTML-Seiten, Diagramme, Dashboards — kein Code nötig</div>
+          <div class="s-task">Club-Tool: Gemeinsam ein einfaches Gruppentools mit Artifacts bauen</div>
+        </div>
+        <div class="mini-challenge"><strong>Mini-Challenge bis Session 12</strong>Lass Claude ein Artifact bauen, das du wirklich nutzen wirst. Zeige es in der nächsten Session live.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="2" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S12</span>
+        <span class="s-title">Phase 2 Review: Mein AI-Workflow Showcase</span>
+        <span class="s-type t-project">Projekt</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Jede:r präsentiert ihren persönlichen AI-Workflow, der in den letzten 2 Monaten entstanden ist. Was ist jetzt anders als vor 4 Monaten? Was würde ich nie mehr manuell machen?</div>
+        <div class="s-tasks">
+          <div class="s-task">Jede:r: "Mein beste AI-Workflow" — 8 Minuten Präsentation</div>
+          <div class="s-task">Feedback-Runde: Was übernehme ich von anderen?</div>
+          <div class="s-task">Gemeinsam: Anthropic Academy — welchen Kurs wollen wir für Phase 3?</div>
+          <div class="s-task">Planung Phase 3: Agent Skills & Automation-Themen abstimmen</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHASE 3 PAGE -->
+<div class="page" id="page-phase3">
+  <div class="section-head">
+    <span class="section-tag" style="border-color:#1D9E75;color:#1D9E75">Phase 3</span>
+    <span class="section-title">Advanced — Monat 5 & 6</span>
+  </div>
+  <div class="sessions" id="sessions-p3">
+
+    <div class="session" data-phase="3" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S13</span>
+        <span class="s-title">Claude Cowork & Desktop: AI für Knowledge Work</span>
+        <span class="s-type t-tools">Tools</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Claude Cowork ist Anthropics neuer Desktop-Agent für Wissensarbeit — auch für Non-Techniker. Wir erkunden gemeinsam, wie man Dateien, Apps und komplexe Aufgaben automatisiert.</div>
+        <div class="s-tasks">
+          <div class="s-task">Anthropic Academy: "Introduction to Claude Cowork" durcharbeiten</div>
+          <div class="s-task">Demo: Claude Cowork auf dem eigenen Computer installieren und testen</div>
+          <div class="s-task">Automatisierungsideen sammeln: Was könnte Cowork für mich tun?</div>
+          <div class="s-task">Gemeinsam einen einfachen Cowork-Workflow aufsetzen</div>
+        </div>
+        <span class="s-course">📖 Kurs: Introduction to Claude Cowork — anthropic.skilljar.com</span>
+      </div>
+    </div>
+
+    <div class="session" data-phase="3" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S14</span>
+        <span class="s-title">MCP: Claude mit der Welt verbinden</span>
+        <span class="s-type t-theory">Theorie</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Model Context Protocol (MCP) ist der Standard, mit dem Claude echte Apps und Dienste nutzen kann. Wir verstehen das Konzept und aktivieren die wichtigsten MCP-Connectors in Claude.ai.</div>
+        <div class="s-tasks">
+          <div class="s-task">Anthropic Academy: "Intro to Model Context Protocol (MCP)" beginnen</div>
+          <div class="s-task">In Claude.ai: Verfügbare MCP-Connectors entdecken und aktivieren</div>
+          <div class="s-task">Praktisch: Google Drive, Gmail oder Slack mit Claude verbinden</div>
+          <div class="s-task">Demo: Claude schreibt, liest und organisiert echte Daten aus deinen Apps</div>
+        </div>
+        <span class="s-course">📖 Kurs: Intro to Model Context Protocol — anthropic.skilljar.com</span>
+      </div>
+    </div>
+
+    <div class="session" data-phase="3" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S15</span>
+        <span class="s-title">AI Agents: Aufgaben die sich selbst erledigen</span>
+        <span class="s-type t-practice">Praxis</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Agents sind AI-Systeme, die mehrstufige Aufgaben eigenständig durchführen. Wir lernen das Konzept, schauen uns Subagents an und verstehen wie man Aufgaben delegiert statt nur fragt.</div>
+        <div class="s-tasks">
+          <div class="s-task">Anthropic Academy: "Introduction to Subagents" durcharbeiten</div>
+          <div class="s-task">Was ist ein Agent? Unterschied zu normalen Prompts erklären</div>
+          <div class="s-task">Claude Agent Skills: Reusable Instructions aufsetzen</div>
+          <div class="s-task">Gemeinsam: Einen einfachen Multi-Schritt-Workflow als Agent bauen</div>
+        </div>
+        <span class="s-course">📖 Kurs: Introduction to Subagents — anthropic.skilljar.com</span>
+      </div>
+    </div>
+
+    <div class="session" data-phase="3" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S16</span>
+        <span class="s-title">Automation Deep-Dive: Eigene AI-Flows für den Alltag</span>
+        <span class="s-type t-practice">Praxis</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Wir kombinieren alles: Claude + MCP + Tools + Automation-Plattformen wie Make oder Zapier. Ziel: Jede:r baut einen echten Workflow, der ihr täglich mindestens 30 Minuten spart.</div>
+        <div class="s-tasks">
+          <div class="s-task">Inspiration: Jede:r nennt ihre zeitraubendste wiederkehrende Aufgabe</div>
+          <div class="s-task">Automation-Stack aufbauen: Claude + Make.com oder n8n</div>
+          <div class="s-task">Workshop: Mini-Automation live bauen und testen</div>
+          <div class="s-task">Gemeinsam: Club-Newsletter-Automation erstellen (optional)</div>
+        </div>
+        <div class="mini-challenge"><strong>Projekt bis Session 17</strong>Bau deine persönliche AI-Automation, die du täglich nutzen wirst. Dokumentiere sie so, dass andere sie auch nutzen könnten.</div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="3" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S17</span>
+        <span class="s-title">AI-Trends 2026/27: Was kommt als nächstes?</span>
+        <span class="s-type t-theory">Theorie</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Ein Blick in die Zukunft: Multimodale AI, AI in der Arbeitswelt, neue Modelle. Wir schauen gemeinsam, welche Trends gerade entstehen und was wir als nächstes lernen wollen — Phase 4?</div>
+        <div class="s-tasks">
+          <div class="s-task">Jede:r recherchiert: "Der AI-Trend, der mich am meisten beschäftigt" — 5 Min. Präsentation</div>
+          <div class="s-task">Claude's Roadmap: Was verrät Anthropic über kommende Features?</div>
+          <div class="s-task">Diskussion: Wie verändert sich unser Job/Leben in den nächsten 2 Jahren?</div>
+          <div class="s-task">Club-Entscheidung: Weitermachen? Wie sieht Phase 4 aus?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="session" data-phase="3" onclick="toggleSession(this)">
+      <div class="s-head">
+        <div class="s-check"><span class="s-tick">✓</span></div>
+        <span class="s-num">S18</span>
+        <span class="s-title">Grand Finale: Mein persönliches AI-Setup präsentieren</span>
+        <span class="s-type t-project">Projekt</span>
+      </div>
+      <div class="s-details">
+        <div class="s-desc">Abschluss-Session: Jede:r präsentiert ihr komplettes, persönliches AI-Setup nach 6 Monaten. Tools, Workflows, Prompts, Automations. Was ist aus dem Club geworden?</div>
+        <div class="s-tasks">
+          <div class="s-task">Jede:r: "So nutze ich AI heute" — 10 Minuten Live-Demo</div>
+          <div class="s-task">Anthropic Academy Zertifikate präsentieren und feiern 🎉</div>
+          <div class="s-task">Gemeinsam: Club-Learnings dokumentieren — was war der größte Aha-Moment?</div>
+          <div class="s-task">Feiern: 6 Monate Her AI Studio Club 🖤</div>
+          <div class="s-task">Abstimmung: Was lernst du als nächstes? Themen für Phase 4 sammeln</div>
+        </div>
+        <div class="mini-challenge"><strong>Abschlussprojekt</strong>Erstelle eine "AI Learning Journey" — eine kurze Dokumentation deines Weges über 6 Monate. Bilder, Prompts, Workflows, Erkenntnisse. Für dich und für die Gruppe.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONCEPTS PAGE -->
+<div class="page" id="page-concepts">
+  <div class="section-head">
+    <span class="section-tag">Grundkonzepte</span>
+    <span class="section-title">Was du wirklich wissen musst</span>
+  </div>
+
+  <div class="concept-mega">
+    <div class="cm-head">
+      <span class="cm-badge" style="background:var(--amber-light);color:#633806">Prompt Engineering</span>
+      <span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700">Die Basis — alles andere baut darauf auf</span>
+    </div>
+    <div class="concept-list">
+      <div class="cl-item"><div class="cl-dot"></div><div><strong>Rollen-Prompting:</strong> "Du bist eine erfahrene Marketing-Strategin..." — gibt Claude Kontext über seine Perspektive</div></div>
+      <div class="cl-item"><div class="cl-dot"></div><div><strong>Few-Shot Prompting:</strong> Beispiele zeigen was du meinst, statt es zu beschreiben. 2-3 Beispiele reichen.</div></div>
+      <div class="cl-item"><div class="cl-dot"></div><div><strong>Chain-of-Thought:</strong> "Denke Schritt für Schritt nach..." — Claude erklärt seinen Denkweg, bessere Ergebnisse bei komplexen Aufgaben</div></div>
+      <div class="cl-item"><div class="cl-dot"></div><div><strong>Format-Kontrolle:</strong> "Antworte als Tabelle / als Bullet-Liste / in max. 150 Wörtern" — präzise Ausgaben definieren</div></div>
+      <div class="cl-item"><div class="cl-dot"></div><div><strong>Ton-Steuerung:</strong> Professionell, locker, akademisch, inspirierend — Claude passt sich deiner Zielgruppe an</div></div>
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="cc-label">Konzept</div>
+      <div class="cc-title">Claude Projects</div>
+      <div class="cc-body">Ein dauerhafter Kontext-Raum mit eigenem Gedächtnis, Dokumenten und Persönlichkeit. Wie ein dedizierter Mitarbeiter für jedes Thema.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-label">Konzept</div>
+      <div class="cc-title">Artifacts</div>
+      <div class="cc-body">Claude erstellt interaktive Outputs: HTML-Seiten, Rechner, Diagramme, kleine Apps — direkt im Chat, ohne dass du coden musst.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-label">Konzept</div>
+      <div class="cc-title">MCP Connectors</div>
+      <div class="cc-body">Verbindet Claude mit echten Apps (Notion, Gmail, Drive). Claude kann dann lesen, schreiben und handeln — nicht nur antworten.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-label">Konzept</div>
+      <div class="cc-title">AI Agents</div>
+      <div class="cc-body">Claude führt mehrstufige Aufgaben eigenständig aus. Du gibst das Ziel vor — Claude plant und erledigt die Schritte selbst.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-label">Konzept</div>
+      <div class="cc-title">Subagents</div>
+      <div class="cc-body">Mehrere spezialisierte Claude-Instanzen arbeiten zusammen. Einer recherchiert, einer schreibt, einer prüft — wie ein Team.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-label">Konzept</div>
+      <div class="cc-title">Halluzinationen</div>
+      <div class="cc-body">Claude erfindet manchmal Fakten, die sich plausibel anhören. Immer querchecken, niemals blind vertrauen — besonders bei Fakten und Zahlen.</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCES PAGE -->
+<div class="page" id="page-resources">
+  <div class="section-head">
+    <span class="section-tag">Ressourcen</span>
+    <span class="section-title">Dein Lernstapel für 6 Monate</span>
+  </div>
+  <div class="resource-grid">
+    <div class="resource-card">
+      <div class="rc-icon" style="background:var(--rosa-light);color:var(--rosa)">🎓</div>
+      <div class="rc-body">
+        <div class="rc-label">Anthropic Academy — Priorität 1</div>
+        <div class="rc-title">Claude 101 + Prompt Engineering Fundamentals</div>
+        <div class="rc-desc">Der offizielle Einstieg. Komplett kostenlos, kein Anthropic-Account nötig. Für alle Levels geeignet. Startet hier.</div>
+        <div class="rc-link">→ anthropic.skilljar.com</div>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="rc-icon" style="background:var(--purple-light);color:var(--purple)">🧠</div>
+      <div class="rc-body">
+        <div class="rc-label">Anthropic Academy — Priorität 2</div>
+        <div class="rc-title">AI Fluency: Framework & Foundations + AI Capabilities & Limitations</div>
+        <div class="rc-desc">Versteht wie AI wirklich funktioniert, was sie kann und was nicht. Essenziell für verantwortungsvolle Nutzung.</div>
+        <div class="rc-link">→ anthropic.skilljar.com</div>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="rc-icon" style="background:var(--green-light);color:var(--green)">⚡</div>
+      <div class="rc-body">
+        <div class="rc-label">Anthropic Academy — Phase 3</div>
+        <div class="rc-title">MCP, Subagents, Claude Cowork (17 Kurse total)</div>
+        <div class="rc-desc">Alle 17 Kurse sind kostenlos — Zertifikate inklusive. Für Phase 3 empfehlen wir MCP, Subagents und Cowork als Hauptkurse.</div>
+        <div class="rc-link">→ anthropic.skilljar.com</div>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="rc-icon" style="background:var(--amber-light);color:var(--amber)">📖</div>
+      <div class="rc-body">
+        <div class="rc-label">Offizielle Docs</div>
+        <div class="rc-title">docs.claude.com + support.claude.com</div>
+        <div class="rc-desc">Immer aktuell. Wenn Claude ein neues Feature hat, findet ihr es hier zuerst. Besonders nützlich für MCP und Projects.</div>
+        <div class="rc-link">→ docs.claude.com</div>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="rc-icon" style="background:#F2EDE8;color:#6B6560">🎬</div>
+      <div class="rc-body">
+        <div class="rc-label">Kreativ-Tool</div>
+        <div class="rc-title">Higgsfield AI — Video-Generierung</div>
+        <div class="rc-desc">Claude schreibt das Script, Higgsfield erstellt das Video. Perfekt für Instagram Reels, Produktvideos und kreative Projekte. Bereits im Club integriert.</div>
+        <div class="rc-link">→ higgsfield.ai</div>
+      </div>
+    </div>
+    <div class="resource-card">
+      <div class="rc-icon" style="background:#E6F1FB;color:#185FA5">🔗</div>
+      <div class="rc-body">
+        <div class="rc-label">Automation</div>
+        <div class="rc-title">Make.com (kostenloser Plan) für AI-Automations</div>
+        <div class="rc-desc">Verbindet Claude mit hunderten anderen Apps ohne Code. Kostenloser Plan reicht für erste Automations. Empfohlen für Phase 3.</div>
+        <div class="rc-link">→ make.com</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES PAGE -->
+<div class="page" id="page-notes">
+  <div class="section-head">
+    <span class="section-tag">Notizen</span>
+    <span class="section-title">Dein persönliches Notizbuch</span>
+  </div>
+  <div class="notes-card">
+    <div class="notes-header">🔥 Mein bester Prompt bisher</div>
+    <textarea class="note-area" placeholder="Schreibe hier deinen besten Prompt auf — den, der wirklich funktioniert..." id="note-prompt"></textarea>
+    <button class="save-btn" onclick="saveNote('prompt')">Speichern</button>
+  </div>
+  <div class="notes-card">
+    <div class="notes-header">💡 Aha-Momente & Learnings</div>
+    <textarea class="note-area" placeholder="Was hat dich überrascht? Was hat deinen Umgang mit AI verändert?" id="note-learnings"></textarea>
+    <button class="save-btn" onclick="saveNote('learnings')">Speichern</button>
+  </div>
+  <div class="notes-card">
+    <div class="notes-header">🛠 Meine AI-Routine (täglich)</div>
+    <textarea class="note-area" placeholder="Welche 3 Dinge machst du jetzt jeden Tag mit Claude?" id="note-routine"></textarea>
+    <button class="save-btn" onclick="saveNote('routine')">Speichern</button>
+  </div>
+  <div class="notes-card">
+    <div class="notes-header">❓ Offene Fragen & Themen für den Club</div>
+    <textarea class="note-area" placeholder="Was willst du in der nächsten Session fragen? Was verstehst du noch nicht?" id="note-questions"></textarea>
+    <button class="save-btn" onclick="saveNote('questions')">Speichern</button>
+  </div>
+</div>
+
+<script>
+const TOTAL = 18;
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  event.target.classList.add('on');
+}
+
+function togglePhase(el) {
+  const body = el.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function toggleSession(el) {
+  const head = el.querySelector('.s-head');
+  const check = el.querySelector('.s-check');
+  const target = event.target;
+  if(target === check || check.contains(target)) {
+    el.classList.toggle('done');
+    updateProgress();
+    return;
+  }
+  el.classList.toggle('expanded');
+}
+
+function updateProgress() {
+  const done = document.querySelectorAll('.session.done');
+  const total = document.querySelectorAll('.session').length;
+  const pct = Math.round(done.length / total * 100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-count').textContent = done.length+' von '+total+' Sessions abgeschlossen';
+  document.getElementById('global-prog').textContent = done.length+' / '+total+' Sessions';
+
+  [1,2,3].forEach(p=>{
+    const pd = document.querySelectorAll(`.session[data-phase="${p}"].done`).length;
+    const pt = document.querySelectorAll(`.session[data-phase="${p}"]`).length;
+    const pp = Math.round(pd/pt*100);
+    document.getElementById('pp'+p).style.width = pp+'%';
+    document.getElementById('pp'+p+'-count').textContent = pd+' / '+pt;
+  });
+}
+
+function saveNote(key) {
+  const val = document.getElementById('note-'+key).value;
+  localStorage.setItem('haiclub-note-'+key, val);
+  const btn = event.target;
+  btn.textContent = '✓ Gespeichert';
+  btn.style.color = 'var(--green)';
+  btn.style.borderColor = 'var(--green)';
+  setTimeout(()=>{btn.textContent='Speichern';btn.style.color='';btn.style.borderColor='';},2000);
+}
+
+window.addEventListener('load',()=>{
+  ['prompt','learnings','routine','questions'].forEach(k=>{
+    const saved = localStorage.getItem('haiclub-note-'+k);
+    if(saved) document.getElementById('note-'+k).value = saved;
+  });
+});
+</script>
+</body>
+</html>
